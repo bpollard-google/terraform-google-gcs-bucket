@@ -1,0 +1,15 @@
+{
+    "failed_checks": [
+        {
+            "file": "/main.tf",
+            "findings": [
+                {
+                    "resource": "module.bucket.google_storage_bucket.this",
+                    "check_ids": [
+                        "CKV_GCP_114"
+                    ]
+                }
+            ]
+        }
+    ]
+}
