@@ -90,3 +90,9 @@ variable "iam_bindings" {
   type        = map(list(string))
   default     = {}
 }
+
+
+variable "deliberately_unformatted" {
+      type = string
+  default     = "x"
+}
