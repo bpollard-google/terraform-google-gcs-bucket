@@ -90,3 +90,18 @@ variable "iam_bindings" {
   type        = map(list(string))
   default     = {}
 }
+
+variable "retention_policy" {
+  description = "Bucket retention policy. When set, objects cannot be deleted or overwritten until they reach the retention period."
+  type = object({
+    retention_period_days = number
+    is_locked             = optional(bool, false)
+  })
+  default = null
+
+  validation {
+    condition     = var.retention_policy == null ? true : var.retention_policy.retention_period_days > 0
+    error_message = "retention_period_days must be greater than 0."
+  }
+}
+

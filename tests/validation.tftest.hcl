@@ -28,3 +28,14 @@ run "rejects_unknown_storage_class" {
   }
   expect_failures = [var.storage_class]
 }
+
+run "rejects_non_positive_retention_period" {
+  command = plan
+  variables {
+    retention_policy = {
+      retention_period_days = 0
+    }
+  }
+  expect_failures = [var.retention_policy]
+}
+

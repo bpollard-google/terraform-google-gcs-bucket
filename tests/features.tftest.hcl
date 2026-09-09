@@ -129,3 +129,75 @@ run "no_iam_members_by_default" {
     error_message = "No IAM members should be created by default."
   }
 }
+
+run "retention_policy_is_configured_when_supplied" {
+  command = plan
+
+  variables {
+    retention_policy = {
+      retention_period_days = 2555
+      is_locked             = false
+    }
+  }
+
+  assert {
+    condition     = length(google_storage_bucket.this.retention_policy) == 1
+    error_message = "Retention policy block should be rendered."
+  }
+
+  assert {
+    condition     = google_storage_bucket.this.retention_policy[0].retention_period == 220752000
+    error_message = "Retention period should be converted from days to seconds."
+  }
+
+  assert {
+    condition     = google_storage_bucket.this.retention_policy[0].is_locked == false
+    error_message = "is_locked should match the supplied value."
+  }
+}
+
+run "retention_policy_is_locked_defaults_to_false" {
+  command = plan
+
+  variables {
+    retention_policy = {
+      retention_period_days = 30
+    }
+  }
+
+  assert {
+    condition     = google_storage_bucket.this.retention_policy[0].is_locked == false
+    error_message = "is_locked must default to false when omitted."
+  }
+
+  assert {
+    condition     = google_storage_bucket.this.retention_policy[0].retention_period == 2592000
+    error_message = "Retention period should be converted from days to seconds."
+  }
+}
+
+run "retention_policy_can_be_locked" {
+  command = plan
+
+  variables {
+    retention_policy = {
+      retention_period_days = 365
+      is_locked             = true
+    }
+  }
+
+  assert {
+    condition     = google_storage_bucket.this.retention_policy[0].is_locked == true
+    error_message = "is_locked should be true when explicitly configured."
+  }
+}
+
+run "no_retention_policy_by_default" {
+  command = plan
+
+  assert {
+    condition     = length(google_storage_bucket.this.retention_policy) == 0
+    error_message = "No retention policy should be configured by default."
+  }
+}
+

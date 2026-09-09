@@ -41,6 +41,11 @@ module "bucket" {
     },
   ]
 
+  retention_policy = {
+    retention_period_days = 365
+    is_locked             = false
+  }
+
   log_bucket = "serviceops-example-access-logs"
 
   iam_bindings = {
