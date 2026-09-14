@@ -112,6 +112,7 @@ No modules.
 | <a name="input_log_bucket"></a> [log\_bucket](#input\_log\_bucket) | Bucket that receives access logs for this bucket. Access logging is disabled when null. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the bucket. Must be globally unique across all of Google Cloud Storage. | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | ID of the project the bucket is created in. | `string` | n/a | yes |
+| <a name="input_retention_policy"></a> [retention\_policy](#input\_retention\_policy) | Retention policy for objects in the bucket. Objects cannot be deleted or overwritten until the retention period elapses. | <pre>object({<br/>    retention_period_days = number<br/>    is_locked             = optional(bool, false)<br/>  })</pre> | `null` | no |
 | <a name="input_storage_class"></a> [storage\_class](#input\_storage\_class) | Default storage class for objects in the bucket. | `string` | `"STANDARD"` | no |
 | <a name="input_uniform_bucket_level_access"></a> [uniform\_bucket\_level\_access](#input\_uniform\_bucket\_level\_access) | Whether uniform bucket-level access is enabled, disabling per-object ACLs. Defaults to true. | `bool` | `true` | no |
 | <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Whether object versioning is enabled. Defaults to true so that accidental deletions are recoverable. | `bool` | `true` | no |
@@ -131,3 +132,12 @@ No modules.
 
 Raise a change request through the module registry, or open an issue on this
 repository using the change request template.
+
+## Retention policy
+
+`retention_policy` makes objects write-once for a fixed period. The period is
+given in days and converted to seconds for the API.
+
+`is_locked` defaults to false and should stay that way unless an auditor
+requires otherwise: locking a retention policy is irreversible, and a locked
+bucket cannot be deleted until every object's retention period has elapsed.

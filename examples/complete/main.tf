@@ -51,6 +51,15 @@ module "bucket" {
       "group:platform-engineering@example.com",
     ]
   }
+
+  # Seven years, the retention the audit-log request asked for. Left unlocked:
+  # locking is irreversible and a locked bucket cannot be deleted until every
+  # object's period has elapsed, which is not a thing to demonstrate on a
+  # sandbox project.
+  retention_policy = {
+    retention_period_days = 2555
+    is_locked             = false
+  }
 }
 
 output "bucket_name" {

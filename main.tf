@@ -42,6 +42,15 @@ resource "google_storage_bucket" "this" {
       }
     }
   }
+
+  dynamic "retention_policy" {
+    for_each = var.retention_policy == null ? [] : [var.retention_policy]
+
+    content {
+      retention_period = retention_policy.value.retention_period_days * 86400
+      is_locked        = retention_policy.value.is_locked
+    }
+  }
 }
 
 resource "google_storage_bucket_iam_member" "this" {
