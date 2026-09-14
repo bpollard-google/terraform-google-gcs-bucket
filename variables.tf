@@ -73,6 +73,20 @@ variable "lifecycle_rules" {
   }
 }
 
+variable "retention_policy" {
+  description = "Retention policy applied to objects in the bucket. Objects cannot be deleted or overwritten until the retention period has elapsed. Disabled when null."
+  type = object({
+    retention_period_days = number
+    is_locked             = optional(bool, false)
+  })
+  default = null
+
+  validation {
+    condition     = var.retention_policy == null ? true : var.retention_policy.retention_period_days > 0
+    error_message = "retention_period_days must be greater than 0."
+  }
+}
+
 variable "kms_key_name" {
   description = "Fully qualified Cloud KMS key used to encrypt objects. Google-managed encryption is used when null."
   type        = string
